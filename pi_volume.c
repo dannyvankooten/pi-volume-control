@@ -96,7 +96,6 @@ void readbuf(char *dest, http_string_t str)
     dest[0] = '\0';
 
     int i;
-    printf("Str len: %d\n", str.len);
     for (i = 0; i < str.len; i++)
     {
         dest[i] = str.buf[i];
