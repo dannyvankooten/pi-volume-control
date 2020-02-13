@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="/manifest.json">
+    <meta charset="utf-8">
+    <title>Woonkamer volume</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        button {
+            font-size: 30vh;
+            margin: 0 auto;
+            display: block;
+            background: #111;
+            color: white;
+            border: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #111;
+            padding: 24px;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST"><button name="volume" value="up">▲</button></form>
+    <form method="POST"><button name="volume" value="down">▼</button></form>
+    <script>document.addEventListener('submit', function (evt) { evt.preventDefault(); window.fetch(window.location.href, { method: 'POST', body: `volume=${evt.target.volume.value}` }); });</script>
+</body>
+</html>
