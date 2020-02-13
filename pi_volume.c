@@ -44,19 +44,15 @@ body { font-family: sans-serif; background: #111; padding: 24px; }\
 
 void readbuf(char *dest, http_string_t str);
 
+int http_string_compare(struct http_string_s s, char expected[]) {
+    return strncmp(s.buf, expected, strlen(expected)) == 0;
+}
+
 void handle_request(struct http_request_s *request)
-{
-    char *method = malloc(4);
-    readbuf(method, http_request_method(request));
-    char *target = malloc(20);
-    readbuf(target, http_request_target(request));
-
-    if (strcmp(method, "POST") == 0)
+{    
+    if (http_string_compare(http_request_method(request), "POST"))
     {
-        char *body = malloc(100);
-        readbuf(body, http_request_body(request));
-
-        if (strcmp(body, "volume=up") == 0)
+        if (http_string_compare(http_request_body(request), "volume=up"))
         {
             system("/usr/bin/amixer sset Digital 5%+");
         }
@@ -64,12 +60,11 @@ void handle_request(struct http_request_s *request)
         {
             system("/usr/bin/amixer sset Digital 5%-");
         }
-        free(body);
     }
 
     struct http_response_s *response = http_response_init();
     http_response_status(response, 200);
-    if (strcmp("GET", method) == 0 && strcmp("/manifest.json", target) == 0)
+    if (http_string_compare(http_request_target(request), "/manifest.json"))
     {
         http_response_header(response, "Content-Type", "application/json");
         http_response_body(response, MANIFEST, sizeof(MANIFEST) - 1);
@@ -80,9 +75,6 @@ void handle_request(struct http_request_s *request)
         http_response_body(response, HTML, sizeof(HTML) - 1);
     }
     http_respond(request, response);
-
-    free(method);
-    free(target);
 }
 
 int main()
